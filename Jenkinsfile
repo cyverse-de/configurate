@@ -10,7 +10,7 @@ node {
     sh "docker build --rm -t ${dockerRepo} ."
 
     stage "Test"
-	sh "docker run ${dockerRepo}"
+	sh "docker run --rm ${dockerRepo}"
 
     stage "Clean"
     sh "docker rmi ${dockerRepo}"
