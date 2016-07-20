@@ -7,7 +7,7 @@ import (
 )
 
 func configurator() (*config.Config, error) {
-	path := "../test/test_config.yaml"
+	path := "test/test_config.yaml"
 	return Init(path)
 }
 
