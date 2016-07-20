@@ -13,5 +13,5 @@ node {
 	sh "docker run ${dockerRepo}"
 
     stage "Clean"
-    sh "docker rm ${dockerRepo}"
+    sh "docker rmi ${dockerRepo}"
 }
