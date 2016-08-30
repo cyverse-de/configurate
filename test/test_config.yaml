@@ -1,5 +1,5 @@
 amqp:
-  uri: amqp://guest:guest@rabbit:5672/
+  uri: amqp://guest:guest@rabbit:5672/jobs
   exchange:
     name: jobs
     type: topic
