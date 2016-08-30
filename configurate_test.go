@@ -21,7 +21,7 @@ func TestNew(t *testing.T) {
 func TestConfig(t *testing.T) {
 	cfg, err := Init(cfgFile)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	// Spot-check a configuration setting.
