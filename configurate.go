@@ -30,8 +30,9 @@ func Init(path string) (*viper.Viper, error) {
 	return cfg, nil
 }
 
-// InitDefaults initializes the underlying config, using defaults for any unspecified configuration settings.
-func InitDefaults(path, defaultConfig string) (*viper.Viper, error) {
+// InitDefaultsReader initializes the underlying config from a file, using defaults for any unspecified configuration
+// settings.
+func InitDefaultsF(f *os.File, defaultConfig string) (*viper.Viper, error) {
 	cfg := viper.New()
 	cfg.SetConfigType("yaml")
 
@@ -40,15 +41,10 @@ func InitDefaults(path, defaultConfig string) (*viper.Viper, error) {
 		return nil, err
 	}
 
-	// Open the configuration file. If the configuration file doesn't exist, simply return the default config.
-	f, err := os.Open(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return cfg, nil
-		}
-		return nil, err
+	// Return the defaults if no configuration file was provided.
+	if f == nil {
+		return cfg, nil
 	}
-	defer f.Close()
 
 	// Merge the configuration file settings.
 	if err := cfg.MergeConfig(f); err != nil {
@@ -56,4 +52,20 @@ func InitDefaults(path, defaultConfig string) (*viper.Viper, error) {
 	}
 
 	return cfg, nil
+}
+
+// InitDefaults initializes the underlying config, using defaults for any unspecified configuration settings.
+func InitDefaults(path, defaultConfig string) (*viper.Viper, error) {
+
+	// Open the configuration file. If the configuration file doesn't exist, simply return the default config.
+	f, err := os.Open(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return InitDefaultsF(nil, defaultConfig)
+		}
+		return nil, err
+	}
+	defer f.Close()
+
+	return InitDefaultsF(f, defaultConfig)
 }
