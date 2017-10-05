@@ -5,6 +5,7 @@ package configurate
 
 import (
 	"bytes"
+	"io"
 	"os"
 
 	"github.com/spf13/viper"
@@ -30,9 +31,9 @@ func Init(path string) (*viper.Viper, error) {
 	return cfg, nil
 }
 
-// InitDefaultsReader initializes the underlying config from a file, using defaults for any unspecified configuration
+// InitDefaultsR initializes the underlying config from a reader, using defaults for any unspecified configuration
 // settings.
-func InitDefaultsF(f *os.File, defaultConfig string) (*viper.Viper, error) {
+func InitDefaultsR(reader io.Reader, defaultConfig string) (*viper.Viper, error) {
 	cfg := viper.New()
 	cfg.SetConfigType("yaml")
 
@@ -42,12 +43,12 @@ func InitDefaultsF(f *os.File, defaultConfig string) (*viper.Viper, error) {
 	}
 
 	// Return the defaults if no configuration file was provided.
-	if f == nil {
+	if reader == nil {
 		return cfg, nil
 	}
 
 	// Merge the configuration file settings.
-	if err := cfg.MergeConfig(f); err != nil {
+	if err := cfg.MergeConfig(reader); err != nil {
 		return nil, err
 	}
 
@@ -61,11 +62,11 @@ func InitDefaults(path, defaultConfig string) (*viper.Viper, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return InitDefaultsF(nil, defaultConfig)
+			return InitDefaultsR(nil, defaultConfig)
 		}
 		return nil, err
 	}
 	defer f.Close()
 
-	return InitDefaultsF(f, defaultConfig)
+	return InitDefaultsR(f, defaultConfig)
 }
