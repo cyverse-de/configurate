@@ -22,6 +22,7 @@ db:
 external_irods:
   host: "irods"
   port: "1247"
+  user: "job"
 
 irods:
   user: "rods"
