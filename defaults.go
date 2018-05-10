@@ -40,6 +40,9 @@ porklock:
 status_listener:
   url: "http://job-status-listener/"
 
+path_list:
+    file_identifier: "# application/vnd.de.multi-input-path-list+csv; version=1"
+
 tickets_path_list:
   file_identifier: "# application/vnd.de.tickets-path-list+csv; version=1"
 `
