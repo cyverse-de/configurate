@@ -19,6 +19,10 @@ condor:
 db:
   uri: postgresql://guest:guest@dedb:5432/de?sslmode=disable
 
+email:
+  smtp_host: local-exim
+  from_address: noreply@cyverse.org
+
 external_irods:
   host: "irods"
   port: "1247"
