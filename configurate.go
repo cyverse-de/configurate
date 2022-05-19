@@ -7,9 +7,46 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/spf13/viper"
 )
+
+type Replacer func(string) string
+
+func (r Replacer) Replace(s string) string {
+	return r(s)
+}
+
+func replace(s string) string {
+	return strings.ReplaceAll(s, ".", "_")
+}
+
+func InitEnvFile(path, prefix string) (*viper.Viper, error) {
+	cfg := viper.NewWithOptions(
+		viper.EnvKeyReplacer(Replacer(replace)),
+	)
+
+	cfg.SetConfigType("env")
+	cfg.SetConfigFile(path)
+	cfg.SetEnvPrefix(prefix)
+
+	if err := cfg.ReadInConfig(); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
+}
+
+func InitEnvVars(prefix string) *viper.Viper {
+	cfg := viper.NewWithOptions(
+		viper.EnvKeyReplacer(Replacer(replace)),
+	)
+
+	cfg.SetEnvPrefix(prefix)
+	cfg.AutomaticEnv()
+	return cfg
+}
 
 // Init initializes the underlying config.
 func Init(path string) (*viper.Viper, error) {
